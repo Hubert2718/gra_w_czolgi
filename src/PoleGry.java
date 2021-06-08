@@ -5,11 +5,11 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PoleGry extends JPanel implements Runnable {
+public class PoleGry extends JPanel  {
     private static int SZEROKOSC_GRY;
     private static int WYSOKOSC_GRY;
     private static final Dimension ROZMIAR_OKNA = new Dimension(SZEROKOSC_GRY, WYSOKOSC_GRY);
-    private static int SREDNICA_POCISKU = 10;
+    private static int srednicaPocisku = 10;
     private static final int SZEROKOSC_CZOLGU = 50;
     private static final int WYSOKOSC_CZOLGU = 40;
     private static final int SZEROKOSC_LUFY = 60;
@@ -46,8 +46,6 @@ public class PoleGry extends JPanel implements Runnable {
         this.addKeyListener(new AL());
         this.setPreferredSize(ROZMIAR_OKNA);
 
-        Thread gameThread = new Thread(this);
-        gameThread.start();
     }
 
 
@@ -182,25 +180,16 @@ public class PoleGry extends JPanel implements Runnable {
             pocisk.zmienPozycje();
         }
     }
-    @Override
-    public void run() {
-        long lastTime = System.nanoTime();
-        double amountOfTicks = 60.0;
-        double ns = 1000000000 / amountOfTicks;
-        double delta = 0;
-
-        while(true) {
-            long now = System.nanoTime();
-            delta += (now - lastTime)/ns;
-            lastTime = now;
-            if(delta >= 1) {
-                aktualizujPozycje();
-                sprawdzKolizje();
-                repaint();
-                delta--;
-            }
+    public void zwiekszPoziomTrudnosci() {
+        srednicaPocisku -= 0.25;
+        bokKomorki -= 1;
+        for(Komorka k : komorki) {
+            k.zmienPredkosc();
+            k.zmniejszBok();
+            k.zwiekszZycie();
         }
     }
+
     public class AL extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             czolg1.nasisnietyPrzycisk(e);
@@ -209,11 +198,11 @@ public class PoleGry extends JPanel implements Runnable {
             lufa2.nasisnietyPrzycisk(e);
 
             if(e.getKeyCode() == KeyEvent.VK_ENTER && liczbaPociskow2 != limitPociskow) {
-                pociski2.add(new Pocisk(lufa2.wezXPozycje(), lufa2.wezYPozycje(), SREDNICA_POCISKU, SREDNICA_POCISKU, 2, lufa2.wezKat()));
+                pociski2.add(new Pocisk(lufa2.wezXPozycje(), lufa2.wezYPozycje(), srednicaPocisku, srednicaPocisku, 2, lufa2.wezKat()));
                 liczbaPociskow2++;
             }
             if(e.getKeyCode() == KeyEvent.VK_SPACE && liczbaPociskow1 != limitPociskow) {
-                pociski1.add(new Pocisk(lufa1.wezXPozycje(), lufa1.wezYPozycje(), SREDNICA_POCISKU, SREDNICA_POCISKU, 1, lufa1.wezKat()));
+                pociski1.add(new Pocisk(lufa1.wezXPozycje(), lufa1.wezYPozycje(), srednicaPocisku, srednicaPocisku, 1, lufa1.wezKat()));
                 liczbaPociskow1++;
             }
 

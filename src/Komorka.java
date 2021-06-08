@@ -2,12 +2,16 @@ import java.awt.*;
 import java.util.Random;
 
 public class Komorka extends Rectangle {
+    private int fontSize = 20;
     private int bok;
+    private int xStringShift = 5;
+    private int yStringShift = 16;
     private int punktyZycia;
     private int poczatkowePunktyZycia;
     private Random random;
     private double predkoscY;
     private double szybkosc = 0.2;
+    private int kierunek;
     private double x;
     private double y;
     private int idKoloni;
@@ -32,12 +36,13 @@ public class Komorka extends Rectangle {
         g.setColor(Color.decode(kolory[punktyZycia-1]));
         g.fill3DRect((int)Math.round(x), (int)Math.round(y), bok, bok, true);
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Consolas", Font.PLAIN, 20));
-        g.drawString(String.valueOf(punktyZycia), (int)Math.round(x) + 5, (int)Math.round(y) + 16);
+        g.setFont(new Font("Consolas", Font.PLAIN, fontSize));
+        g.drawString(String.valueOf(punktyZycia), (int)Math.round(x) + xStringShift, (int)Math.round(y) + yStringShift);
     }
 
     private void ustawKierunekY(int kierunekY) {
         predkoscY = kierunekY * szybkosc;
+        this.kierunek = kierunekY;
     }
     public void zmienKierunek() {
         predkoscY = -predkoscY;
@@ -75,5 +80,21 @@ public class Komorka extends Rectangle {
     public int wezID() {
         return idKoloni;
     }
+    public void zmienPredkosc() {
+        predkoscY = predkoscY * 1.5;
+    }
+    public void zmniejszBok() {
+        bok = (int) Math.round(bok * 0.9);
+        fontSize = (int) Math.round(fontSize * 0.9);
+        xStringShift = (int) Math.round(xStringShift * 0.9);
+        yStringShift = (int) Math.round(yStringShift * 0.9);
+    }
+
+    public void zwiekszZycie() {
+        if(punktyZycia != 9) {
+            punktyZycia ++;
+        }
+    }
+
 
 }
