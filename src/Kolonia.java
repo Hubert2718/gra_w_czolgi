@@ -18,22 +18,40 @@ public class Kolonia {
        sumaPunktowZycia = komorki.get(0).wezPunktyZycia();
        int x = komorki.get(0).wezX();
        int y = komorki.get(0).wezY();
+
        for( int i = 1; komorki.size() != liczbaKomorek; i++) {
+           System.out.println(komorki.size());
            komorki.add(new Komorka(Math.max(x - liczbaKomorek * bokKomorki, zakresX1),Math.min(x + liczbaKomorek + bokKomorki, zakresX2),
                    Math.max(y - liczbaKomorek * bokKomorki, 0), Math.min(y + liczbaKomorek * bokKomorki, zakresY), bokKomorki, kierunek, idKoloni));
-           for (int j = 0; j < komorki.size() && i!=j; j++) {
-               if(komorki.get(i).wspolnaSciana(komorki.get(j).wezX(), komorki.get(j).wezY(), bokKomorki)) {
-                   sumaPunktowZycia += komorki.get(i).wezPunktyZycia();
-                   wsp = true;
+           for (int j = 0; j < komorki.size(); j++) {
+               if(i!=j) {
+                   if (komorki.get(i).wspolnaSciana(komorki.get(j).wezX(), komorki.get(j).wezY(), bokKomorki)) {
+                       sumaPunktowZycia += komorki.get(i).wezPunktyZycia();
+                       wsp = true;
+                   }
+                   if(komorki.get(i).czyTeSameWsp(komorki.get(j).wezX(), komorki.get(j).wezY())) {
+                       wsp = false;
+                       break;
+                 /*  } else {
+                       for(Komorka k : komorki) {
+                          // System.out.println("\nwsporzedne X komorki: " + k.wezX() + "\nwsporzedna Y komorki: " + k.wezY() + "\nPunkty zycia: " + k.wezPunktyZycia());
+                       }
+                       wsp = false;
+                       break;
+                   }*/
+                   }
                }
            }
+
            if(!wsp && i > 0) {
                komorki.remove(i);
                i--;
            }
+
            wsp = false;
 
        }
+
    }
 
    public ArrayList<Komorka> wezKolonie() {

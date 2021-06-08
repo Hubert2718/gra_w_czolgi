@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 public class Wynik extends JPanel implements ActionListener {
 
     static int GAME_WIDTH;
-    final int TIME1 = 20000;
+    final int TIME1 = 200000;
     final int TIME2 = 600000;
     private int player1 = 0;
     private int player2 = 0;
@@ -37,7 +37,6 @@ public class Wynik extends JPanel implements ActionListener {
             seconds_string =  String.format("%02d", seconds);
             minutes_string =  String.format("%02d", minutes);
             timeLabel.setText(minutes_string + ":" + seconds_string);
-            System.out.println(seconds);
             if(elapsedTime == 1000) {
                 timeEnd = true;
             }
@@ -52,7 +51,6 @@ public class Wynik extends JPanel implements ActionListener {
             seconds_string2 =  String.format("%02d", seconds2);
             minutes_string2 =  String.format("%02d", minutes2);
             timeLabel.setText(minutes_string2 + ":" + seconds_string2);
-            System.out.println(seconds2);
             if(elapsedTime2 == 1000) {
                 timeEnd2 = true;
             }
@@ -66,7 +64,6 @@ public class Wynik extends JPanel implements ActionListener {
 
 
     }
-
     public void draw(Graphics g) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Consolas", Font.PLAIN, 60));
@@ -79,14 +76,12 @@ public class Wynik extends JPanel implements ActionListener {
         g.drawString(minutes_string + ":" + seconds_string, 20, 50);
         g.drawString(minutes_string2 + ":" + seconds_string2, GAME_WIDTH - 200, 50);
     }
-
     public void paint(Graphics g) {
         image = createImage(getWidth(), getHeight());
         graphics = (Graphics2D) image.getGraphics();
         draw(graphics);
         g.drawImage(image, 0, 0, this);
     }
-
     public void zwiekszPunkty(int komu, int ile) {
         switch(komu) {
             case 1:
@@ -104,8 +99,6 @@ public class Wynik extends JPanel implements ActionListener {
         timeEnd = false;
         elapsedTime = TIME1;
     }
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
 

@@ -12,7 +12,7 @@ public class Komorka extends Rectangle {
     private double predkoscY;
     private double szybkosc = 0.2;
     private int kierunek;
-    private double x;
+    private int x;
     private double y;
     private int idKoloni;
     private String [] kolory = new String[] {"#CEC4C4", "#45F1FE", "#29AEFB", "#4475C8", "#4200DA",
@@ -24,6 +24,20 @@ public class Komorka extends Rectangle {
         this.bok = bok;
         x = random.nextInt(zakresX2 - zakresX1 + 1) + zakresX1;
         y = random.nextInt(zakresY2 - bok - zakresY1+ 1) + zakresY1;
+        punktyZycia = poczatkowePunktyZycia = random.nextInt(9) + 1;
+        if(kirunek)
+            ustawKierunekY(-1);
+        else
+            ustawKierunekY(1);
+
+
+    }
+    Komorka(int X, int Y, int bok, boolean kirunek, int idKoloni) {
+        random = new Random();
+        this.idKoloni = idKoloni;
+        this.bok = bok;
+        x = X;
+        y = y;
         punktyZycia = poczatkowePunktyZycia = random.nextInt(9) + 1;
         if(kirunek)
             ustawKierunekY(-1);
@@ -51,16 +65,22 @@ public class Komorka extends Rectangle {
         y = y + predkoscY;
     }
     public boolean czyNachodzi(int celX, int celY, int bok) {
-        if((this.x < celX + bok)  && (this.x + bok > celX) && (this.y < celY + bok) && (this.y + bok > celY))
+        if(((this.x < celX + bok )  && (this.x + bok > celX ) && (this.y < celY + bok ) && (this.y + bok  > celY )))
+          //  && (this.x != celX) && this.y != celY)
             return true;
         return false;
     }
     boolean wspolnaSciana(int objektX, int objektY, int bok) {
         if((this.x == objektX + bok && this.y == objektY) || (this.x == objektX && this.y == objektY + bok) ||
-                (this.x + bok == objektX && this.y == objektY) || (this.x == objektX && this.y + bok == objektY))
+                (this.x == objektX - bok && this.y == objektY) || (this.x == objektX && this.y == objektY - bok))
             return true;
         return false;
 
+    }
+    boolean czyTeSameWsp(int objektX, int objektY) {
+        if(this.wezX() == objektX && this.wezY() == objektY)
+            return true;
+        return false;
     }
     public int wezX() {
         return (int)Math.round(x);

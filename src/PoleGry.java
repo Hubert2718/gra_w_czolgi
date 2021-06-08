@@ -14,9 +14,9 @@ public class PoleGry extends JPanel  {
     private static final int WYSOKOSC_CZOLGU = 40;
     private static final int SZEROKOSC_LUFY = 60;
     private static final int WYSOKOSC_LUFY = 10;
-    private static final int LICZBA_POJEDYNCZYCH_KOMOREK = 10;
-    private static final int LICZBA_KOLONI = 20;
-    private static int bokKomorki = 20;
+    private static final int LICZBA_POJEDYNCZYCH_KOMOREK = 2;
+    private static final int LICZBA_KOLONI = 2;
+    private static int bokKomorki = 30;
     private static Wynik wynik;
     private int liczbaPociskow1;
     private int liczbaPociskow2;
@@ -50,6 +50,11 @@ public class PoleGry extends JPanel  {
 
 
     public void sprawdzKolizje() {
+        if(komorki.size() <= 0) {
+            noweKolonie();
+            noweKomorki();
+        }
+
         // czolgi i lufy nie wychodza poza krawedzie
         if (czolg1.y <= 0) {
             czolg1.y = 0;
@@ -91,10 +96,12 @@ public class PoleGry extends JPanel  {
                         kolonie.get(komorki.get(j).wezID()).zabijKomorke();
                         if(kolonie.get(komorki.get(j).wezID()).ileZywych() == 0) {
                             wynik.zwiekszPunkty(1, kolonie.get(komorki.get(j).wezID()).wezPunktyZycia());
-                            wynik.repaint();
+                            kolonie.remove(kolonie.get(komorki.get(j).wezID()));
                             komorki.remove(j);
                         }
-                        komorki.remove(j);
+                        if(komorki.size() != 0) {
+                            komorki.remove(j);
+                        }
                     }
                     break;
                 }
@@ -114,7 +121,7 @@ public class PoleGry extends JPanel  {
                     liczbaPociskow2--;
                     if(komorki.get(j).wezPunktyZycia() == 0 && komorki.get(j).wezID() == 999) {
                         wynik.zwiekszPunkty(2, komorki.get(j).wezPoczatkowePunktyZycia());
-                        wynik.repaint();
+                        kolonie.remove(kolonie.get(komorki.get(j).wezID()));
                         komorki.remove(j);
                     }
                     else if(komorki.get(j).wezPunktyZycia() == 0 && komorki.get(j).wezID() != 999) {
@@ -124,7 +131,9 @@ public class PoleGry extends JPanel  {
                             wynik.repaint();
                             komorki.remove(j);
                         }
-                        komorki.remove(j);
+                        if(komorki.size() >= 1) {
+                            komorki.remove(j);
+                        }
                     }
                     break;
                 }
@@ -132,7 +141,7 @@ public class PoleGry extends JPanel  {
         }
         //komorki nie wychodza poza krawedzie ekranu
         for(Komorka k : komorki) {
-            if (k.wezY() <= 0 || k.wezY() >= (WYSOKOSC_GRY - bokKomorki))
+            if (k.wezY() <= 0 + 2 || k.wezY() >= (WYSOKOSC_GRY - bokKomorki - 2))
                 k.zmienKierunek();
         }
 
@@ -140,7 +149,7 @@ public class PoleGry extends JPanel  {
     public void paint(Graphics g) {
         try
         {
-            image = javax.imageio.ImageIO.read(new java.net.URL(getClass().getResource("background.png"), "background.png"));
+            image = javax.imageio.ImageIO.read(new java.net.URL(getClass().getResource( "background.png"), "background.png"));
         }
         catch (Exception e) { /*handled in paintComponent()*/ }
         Graphics2D graphics = (Graphics2D)image.getGraphics();
@@ -179,6 +188,7 @@ public class PoleGry extends JPanel  {
         for (Pocisk pocisk : pociski2) {
             pocisk.zmienPozycje();
         }
+
     }
     public void zwiekszPoziomTrudnosci() {
         srednicaPocisku -= 0.25;
@@ -204,6 +214,10 @@ public class PoleGry extends JPanel  {
             if(e.getKeyCode() == KeyEvent.VK_SPACE && liczbaPociskow1 != limitPociskow) {
                 pociski1.add(new Pocisk(lufa1.wezXPozycje(), lufa1.wezYPozycje(), srednicaPocisku, srednicaPocisku, 1, lufa1.wezKat()));
                 liczbaPociskow1++;
+                System.out.println("Kolonie:" + kolonie.size() + "\n komórki: " + komorki.size());
+                for(Komorka k : komorki) {
+                    System.out.println("wsporzedne X komorki: " + k.wezX() + "wsporzedna Y komorki: " + k.wezY() + "Punkty zycia: " + k.wezPunktyZycia());
+                }
             }
 
         }
@@ -230,7 +244,8 @@ public class PoleGry extends JPanel  {
             kolonie.add(new Kolonia(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY, SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15, WYSOKOSC_GRY, bokKomorki, i));
             for(Komorka kom : komorki) {
                 for(Komorka komN : kolonie.get(i).wezKolonie()) {
-                    if(komN.czyNachodzi(kom.wezX(), kom.wezY(), bokKomorki)) {
+                    //if(komN.czyNachodzi(kom.wezX(), kom.wezY(), bokKomorki)) {
+                    if(kom.czyNachodzi(komN.wezX(), komN.wezY(), bokKomorki)) {
                         kolonie.remove(i);
                         i--;
                         nachodzi = true;
@@ -239,7 +254,6 @@ public class PoleGry extends JPanel  {
                 }
                 if(nachodzi)
                     break;
-
             }
             if(nachodzi) {
                 nachodzi = false;
@@ -252,7 +266,7 @@ public class PoleGry extends JPanel  {
     private void noweKomorki() {
         int aktualnyRozmiar = komorki.size();
         Random random = new Random();
-        for( int i = aktualnyRozmiar; komorki.size() != aktualnyRozmiar+ LICZBA_POJEDYNCZYCH_KOMOREK; i++) {
+        for( int i = aktualnyRozmiar; komorki.size() != aktualnyRozmiar + LICZBA_POJEDYNCZYCH_KOMOREK; i++) {
             komorki.add(new Komorka(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY ,SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15,0, WYSOKOSC_GRY, bokKomorki, random.nextBoolean(), 999));
             for (int j = 0; j < komorki.size() && i!=j; j++) {
                 if(komorki.get(i).czyNachodzi(komorki.get(j).wezX(), komorki.get(j).wezY(), bokKomorki)) {
