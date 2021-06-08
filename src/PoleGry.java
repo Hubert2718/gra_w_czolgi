@@ -14,8 +14,8 @@ public class PoleGry extends JPanel  {
     private static final int WYSOKOSC_CZOLGU = 40;
     private static final int SZEROKOSC_LUFY = 60;
     private static final int WYSOKOSC_LUFY = 10;
-    private static final int LICZBA_POJEDYNCZYCH_KOMOREK = 3;
-    private static final int LICZBA_KOLONI = 3;
+    private static final int LICZBA_POJEDYNCZYCH_KOMOREK = 10;
+    private static final int LICZBA_KOLONI = 10;
     private static int bokKomorki = 30;
     private static Wynik wynik;
     private int liczbaPociskow1;

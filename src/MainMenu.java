@@ -20,8 +20,8 @@ public class MainMenu {
     private static JPanel menuPanel;
     private static JLabel imageLabel;
     private static JButton startButton;
-    private static JButton menuButton;
     private static JButton settingsButton;
+    private static JButton loadButton;
     private static JButton invisibleButton;
     private static JLabel background;
     private static ImageIcon menuBg;
@@ -111,15 +111,20 @@ public class MainMenu {
             startButton.setBackground(new Color(45, 39, 39));
             startButton.setForeground(Color.white);
 
+            loadButton = new JButton("Wczytaj");
+            loadButton.setBounds(0, 120, 400, 60);
+            loadButton.setBackground(new Color(45, 39, 39));
+            loadButton.setForeground(Color.white);
+
             settingsButton = new JButton("Ustawienia");
             settingsButton.setBounds(0, 240, 400, 60);
             settingsButton.setBackground(new Color(45, 39, 39));
             settingsButton.setForeground(Color.white);
+
             invisibleButton = new JButton();
             invisibleButton.setBounds(0, 0, 0, 0);
 
-            menuButton = new JButton("Menu");
-            menuButton.setBounds(15, 585, 200, 60);
+
 
 
             addPanels();
@@ -137,17 +142,6 @@ public class MainMenu {
             );
 
 
-            menuButton.addActionListener(
-                    new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            frame.getContentPane().removeAll();
-                            frame.revalidate();
-                            addPanels();
-                            frame.repaint();
-                        }
-                    }
-            );
 
             settingsButton.addActionListener(
                     new ActionListener() {
@@ -194,6 +188,7 @@ public class MainMenu {
         menuPanel.add(invisibleButton);
         menuPanel.add(startButton);
         menuPanel.add(settingsButton);
+        menuPanel.add(loadButton);
 
         frame.add(menuPanel);
         frame.add(background);

@@ -101,7 +101,7 @@ public class Komorka extends Rectangle {
         return idKoloni;
     }
     public void zmienPredkosc() {
-        predkoscY = predkoscY * 1.5;
+        predkoscY = predkoscY * 1.1;
     }
     public void zmniejszBok() {
         bok = (int) Math.round(bok * 0.95);
