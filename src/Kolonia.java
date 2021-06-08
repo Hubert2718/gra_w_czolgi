@@ -20,7 +20,6 @@ public class Kolonia {
        int y = komorki.get(0).wezY();
 
        for( int i = 1; komorki.size() != liczbaKomorek; i++) {
-           System.out.println(komorki.size());
            komorki.add(new Komorka(Math.max(x - liczbaKomorek * bokKomorki, zakresX1),Math.min(x + liczbaKomorek + bokKomorki, zakresX2),
                    Math.max(y - liczbaKomorek * bokKomorki, 0), Math.min(y + liczbaKomorek * bokKomorki, zakresY), bokKomorki, kierunek, idKoloni));
            for (int j = 0; j < komorki.size(); j++) {
@@ -32,13 +31,6 @@ public class Kolonia {
                    if(komorki.get(i).czyTeSameWsp(komorki.get(j).wezX(), komorki.get(j).wezY())) {
                        wsp = false;
                        break;
-                 /*  } else {
-                       for(Komorka k : komorki) {
-                          // System.out.println("\nwsporzedne X komorki: " + k.wezX() + "\nwsporzedna Y komorki: " + k.wezY() + "\nPunkty zycia: " + k.wezPunktyZycia());
-                       }
-                       wsp = false;
-                       break;
-                   }*/
                    }
                }
            }

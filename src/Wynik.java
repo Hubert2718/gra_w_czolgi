@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 public class Wynik extends JPanel implements ActionListener {
 
     static int GAME_WIDTH;
-    final int TIME1 = 200000;
-    final int TIME2 = 600000;
+    final int TIME1 = 20000;
+    final int TIME2 = 300000;
     private int player1 = 0;
     private int player2 = 0;
     private Image image;

@@ -104,16 +104,19 @@ public class Komorka extends Rectangle {
         predkoscY = predkoscY * 1.5;
     }
     public void zmniejszBok() {
-        bok = (int) Math.round(bok * 0.9);
-        fontSize = (int) Math.round(fontSize * 0.9);
-        xStringShift = (int) Math.round(xStringShift * 0.9);
-        yStringShift = (int) Math.round(yStringShift * 0.9);
+        bok = (int) Math.round(bok * 0.95);
+        fontSize = (int) Math.round(fontSize * 0.95);
+        xStringShift = (int) Math.round(xStringShift * 0.95);
+        yStringShift = (int) Math.round(yStringShift * 0.95);
     }
 
     public void zwiekszZycie() {
         if(punktyZycia != 9) {
             punktyZycia ++;
         }
+    }
+    public void zmienIDKoloni() {
+        idKoloni --;
     }
 
 

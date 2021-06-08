@@ -14,8 +14,8 @@ public class PoleGry extends JPanel  {
     private static final int WYSOKOSC_CZOLGU = 40;
     private static final int SZEROKOSC_LUFY = 60;
     private static final int WYSOKOSC_LUFY = 10;
-    private static final int LICZBA_POJEDYNCZYCH_KOMOREK = 2;
-    private static final int LICZBA_KOLONI = 2;
+    private static final int LICZBA_POJEDYNCZYCH_KOMOREK = 3;
+    private static final int LICZBA_KOLONI = 3;
     private static int bokKomorki = 30;
     private static Wynik wynik;
     private int liczbaPociskow1;
@@ -50,7 +50,7 @@ public class PoleGry extends JPanel  {
 
 
     public void sprawdzKolizje() {
-        if(komorki.size() <= 0) {
+        if(komorki.size() <= 2 || kolonie.size() <= 1) {
             noweKolonie();
             noweKomorki();
         }
@@ -96,12 +96,17 @@ public class PoleGry extends JPanel  {
                         kolonie.get(komorki.get(j).wezID()).zabijKomorke();
                         if(kolonie.get(komorki.get(j).wezID()).ileZywych() == 0) {
                             wynik.zwiekszPunkty(1, kolonie.get(komorki.get(j).wezID()).wezPunktyZycia());
-                            kolonie.remove(kolonie.get(komorki.get(j).wezID()));
+                            int idKoloni = komorki.get(j).wezID();
+                            for(Komorka k : komorki) {
+                                if (k.wezID() > idKoloni && k.wezID() != 999)
+                                    k.zmienIDKoloni();
+                            }
+                            kolonie.remove(idKoloni);
                             komorki.remove(j);
                         }
-                        if(komorki.size() != 0) {
+                        else
                             komorki.remove(j);
-                        }
+
                     }
                     break;
                 }
@@ -114,30 +119,37 @@ public class PoleGry extends JPanel  {
                 i--;
                 continue;
             }
-            for (int j = 0; j < komorki.size(); j++) {
+            //mozna sprobowac zrobic w jednej petli iterujacej po komorkach
+            for (int j = 0; j < komorki.size(); j++) {                                                    //i dwóch pentlach iterujących po pociskach
                 if (pociski2.get(i).trafiony(komorki.get(j).wezX(), komorki.get(j).wezY(), bokKomorki)) {
                     komorki.get(j).zmniejszZycie();
                     pociski2.remove(i);
                     liczbaPociskow2--;
                     if(komorki.get(j).wezPunktyZycia() == 0 && komorki.get(j).wezID() == 999) {
-                        wynik.zwiekszPunkty(2, komorki.get(j).wezPoczatkowePunktyZycia());
-                        kolonie.remove(kolonie.get(komorki.get(j).wezID()));
+                        wynik.zwiekszPunkty(1, komorki.get(j).wezPoczatkowePunktyZycia());
+                        wynik.repaint();
                         komorki.remove(j);
                     }
                     else if(komorki.get(j).wezPunktyZycia() == 0 && komorki.get(j).wezID() != 999) {
                         kolonie.get(komorki.get(j).wezID()).zabijKomorke();
                         if(kolonie.get(komorki.get(j).wezID()).ileZywych() == 0) {
-                            wynik.zwiekszPunkty(2, kolonie.get(komorki.get(j).wezID()).wezPunktyZycia());
-                            wynik.repaint();
+                            wynik.zwiekszPunkty(1, kolonie.get(komorki.get(j).wezID()).wezPunktyZycia());
+                            int idKoloni = komorki.get(j).wezID();
+                            for(Komorka k : komorki) {
+                                if (k.wezID() > idKoloni && k.wezID() != 999)
+                                    k.zmienIDKoloni();
+                            }
+                            kolonie.remove(idKoloni);
                             komorki.remove(j);
                         }
-                        if(komorki.size() >= 1) {
+                        else
                             komorki.remove(j);
-                        }
+
                     }
                     break;
                 }
             }
+        
         }
         //komorki nie wychodza poza krawedzie ekranu
         for(Komorka k : komorki) {
@@ -191,15 +203,14 @@ public class PoleGry extends JPanel  {
 
     }
     public void zwiekszPoziomTrudnosci() {
-        srednicaPocisku -= 0.25;
-        bokKomorki -= 1;
+        srednicaPocisku *= 0.95;
+        bokKomorki *= 0.95;
         for(Komorka k : komorki) {
             k.zmienPredkosc();
             k.zmniejszBok();
             k.zwiekszZycie();
         }
     }
-
     public class AL extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             czolg1.nasisnietyPrzycisk(e);
@@ -244,7 +255,6 @@ public class PoleGry extends JPanel  {
             kolonie.add(new Kolonia(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY, SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15, WYSOKOSC_GRY, bokKomorki, i));
             for(Komorka kom : komorki) {
                 for(Komorka komN : kolonie.get(i).wezKolonie()) {
-                    //if(komN.czyNachodzi(kom.wezX(), kom.wezY(), bokKomorki)) {
                     if(kom.czyNachodzi(komN.wezX(), komN.wezY(), bokKomorki)) {
                         kolonie.remove(i);
                         i--;
@@ -267,7 +277,9 @@ public class PoleGry extends JPanel  {
         int aktualnyRozmiar = komorki.size();
         Random random = new Random();
         for( int i = aktualnyRozmiar; komorki.size() != aktualnyRozmiar + LICZBA_POJEDYNCZYCH_KOMOREK; i++) {
-            komorki.add(new Komorka(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY ,SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15,0, WYSOKOSC_GRY, bokKomorki, random.nextBoolean(), 999));
+            komorki.add(new Komorka(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY ,
+                    SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15,
+                    0, WYSOKOSC_GRY, bokKomorki, random.nextBoolean(), 999));
             for (int j = 0; j < komorki.size() && i!=j; j++) {
                 if(komorki.get(i).czyNachodzi(komorki.get(j).wezX(), komorki.get(j).wezY(), bokKomorki)) {
                     komorki.remove(i);
