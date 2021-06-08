@@ -129,7 +129,6 @@ public class MainMenu {
                     new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-
                             frame.getContentPane().removeAll();
                             startGry = true;
                             frame.dispose();
@@ -170,6 +169,7 @@ public class MainMenu {
     }
 
     public static void addPanels() {
+
 
         frame.getContentPane().removeAll();
 

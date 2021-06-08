@@ -50,6 +50,12 @@ public class Pocisk extends Rectangle{
             return true;
         return false;
     }
+    public boolean trafionyBomba(int celX, int celY, int bok) {
+        if((this.x + width >= celX) && (this.x <= celX + 2 * bok) && (this.y + this.height >= celY) && (this.y <= celY + bok))
+            return true;
+        return false;
+    }
+
     public int wezX() {
         return (int)Math.round(x);
     }

@@ -26,10 +26,12 @@ public class PoleGry extends JPanel  {
     private Czolg czolg2;
     private Lufa lufa1;
     private Lufa lufa2;
+    private boolean wyjdz = false;
     private ArrayList<Pocisk> pociski1= new ArrayList<Pocisk>();
     private ArrayList<Pocisk> pociski2= new ArrayList<Pocisk>();
     private ArrayList<Komorka> komorki= new ArrayList<Komorka>();
     private ArrayList<Kolonia> kolonie = new ArrayList<Kolonia>();
+    private KomorkaBomba komorkaBomba;
 
     PoleGry(int SZEROKOSC_GRY, int WYSOKOSC_GRY, Wynik wynik) {
         PoleGry.wynik = wynik;
@@ -38,6 +40,7 @@ public class PoleGry extends JPanel  {
         noweCzolgi();
         noweKolonie();
         noweKomorki();
+        komorkaBomba = new KomorkaBomba(SZEROKOSC_GRY/2, WYSOKOSC_GRY - 50, bokKomorki);
 
         /* generowanie nowych komórek */
         /**/
@@ -81,6 +84,15 @@ public class PoleGry extends JPanel  {
                 i--;
                 continue;
             }
+            if(pociski1.get(i).trafionyBomba(komorkaBomba.wezX(), komorkaBomba.wezY(), bokKomorki)) {
+                if(Math.abs(Math.round(pociski1.get(i).wezY() + srednicaPocisku - komorkaBomba.wezY())) <= 1 ) {
+                    wyjdz = true;
+                }
+                pociski1.remove(i);
+                liczbaPociskow1--;
+                i--;
+                continue;
+            }
                                                                                                            //mozna sprobowac zrobic w jednej petli iterujacej po komorkach
             for (int j = 0; j < komorki.size(); j++) {                                                    //i dwóch pentlach iterujących po pociskach
                 if (pociski1.get(i).trafiony(komorki.get(j).wezX(), komorki.get(j).wezY(), bokKomorki)) {
@@ -111,9 +123,19 @@ public class PoleGry extends JPanel  {
                     break;
                 }
             }
+
         }
         for (int i = 0; i < pociski2.size(); i++) {
             if(pociski2.get(i).wezX() < 0 || pociski2.get(i).wezY() > WYSOKOSC_GRY || pociski2.get(i).wezY() < 0) {
+                pociski2.remove(i);
+                liczbaPociskow2--;
+                i--;
+                continue;
+            }
+            if(pociski2.get(i).trafionyBomba(komorkaBomba.wezX(), komorkaBomba.wezY(), bokKomorki)) {
+                if(Math.abs(Math.round(pociski2.get(i).wezY() + srednicaPocisku - komorkaBomba.wezY())) <= 1 ) {
+                    wyjdz = true;
+                }
                 pociski2.remove(i);
                 liczbaPociskow2--;
                 i--;
@@ -173,6 +195,7 @@ public class PoleGry extends JPanel  {
         czolg2.narysuj(g);
         lufa1.narysuj(g);
         lufa2.narysuj(g);
+        komorkaBomba.draw(g);
         for (Pocisk value : pociski1) {
             value.draw(g);
         }
@@ -211,6 +234,9 @@ public class PoleGry extends JPanel  {
             k.zwiekszZycie();
         }
     }
+    public boolean czyWyjsc() {
+        return wyjdz;
+    }
     public class AL extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             czolg1.nasisnietyPrzycisk(e);
@@ -230,6 +256,8 @@ public class PoleGry extends JPanel  {
                     System.out.println("wsporzedne X komorki: " + k.wezX() + "wsporzedna Y komorki: " + k.wezY() + "Punkty zycia: " + k.wezPunktyZycia());
                 }
             }
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                wyjdz = true;
 
         }
         public void keyReleased(KeyEvent e) {

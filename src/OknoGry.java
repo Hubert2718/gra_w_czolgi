@@ -1,9 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class OknoGry extends JFrame implements Runnable {
     PoleGry panel;
     Wynik wynik;
+    private boolean otworzMenu = false;
     private static final int SZEROKOSC_GRY = 1000;
     private static final int WYSOKOSC_OKNA = 555 + 150;
     private static final int WYSOKOSC_GRY = 555;
@@ -45,13 +48,27 @@ public class OknoGry extends JFrame implements Runnable {
             if(delta >= 1) {
                 panel.aktualizujPozycje();
                 panel.sprawdzKolizje();
-                if(wynik.czyNowyTryb() == true) {
-                    wynik.ustawTimer();
-                    panel.zwiekszPoziomTrudnosci();
-                }
                 repaint();
+
                 delta--;
             }
+            if(wynik.czyNowyTryb()) {
+                wynik.ustawTimer();
+                panel.zwiekszPoziomTrudnosci();
+            }
+            if(panel.czyWyjsc()) {
+                zamknij();
+                break;
+            }
         }
+    }
+    private void zamknij() {
+        otworzMenu = true;
+        this.getContentPane().removeAll();
+    }
+
+
+    public boolean czyOtworzycMenu() {
+        return otworzMenu;
     }
 }
