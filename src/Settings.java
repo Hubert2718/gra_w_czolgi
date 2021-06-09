@@ -183,12 +183,8 @@ public class Settings implements ChangeListener {
 
 
                         }
-
                     }
             );
-
-
-
         });
 
     }

@@ -17,8 +17,14 @@ public class Komorka extends Rectangle {
     private int idKoloni;
     private String [] kolory = new String[] {"#CEC4C4", "#45F1FE", "#29AEFB", "#4475C8", "#4200DA",
                                                 "#6F41B2", "#9510AC", "#B24172", "#A82626"};
+    private double deltaBoku;
+    private double deltaPredkosci;
 
-    Komorka(int zakresX1, int zakresX2, int zakresY1, int zakresY2, int bok, boolean kirunek, int idKoloni) {
+    Komorka(int zakresX1, int zakresX2, int zakresY1, int zakresY2, int bok, boolean kirunek, int idKoloni,
+            double szybkosc, double deltaBoku, double deltaPredkosci) {
+        this.deltaBoku = deltaBoku;
+        this.deltaPredkosci = deltaPredkosci;
+        this.szybkosc = szybkosc;
         random = new Random();
         this.idKoloni = idKoloni;
         this.bok = bok;
@@ -37,7 +43,7 @@ public class Komorka extends Rectangle {
         this.idKoloni = idKoloni;
         this.bok = bok;
         x = X;
-        y = y;
+        y = Y;
         punktyZycia = poczatkowePunktyZycia = random.nextInt(9) + 1;
         if(kirunek)
             ustawKierunekY(-1);
@@ -101,13 +107,13 @@ public class Komorka extends Rectangle {
         return idKoloni;
     }
     public void zmienPredkosc() {
-        predkoscY = predkoscY * 1.1;
+        predkoscY = predkoscY * deltaPredkosci;
     }
     public void zmniejszBok() {
-        bok = (int) Math.round(bok * 0.95);
-        fontSize = (int) Math.round(fontSize * 0.95);
-        xStringShift = (int) Math.round(xStringShift * 0.95);
-        yStringShift = (int) Math.round(yStringShift * 0.95);
+        bok = (int) Math.round(bok * deltaBoku);
+        fontSize = (int) Math.round(fontSize * deltaBoku);
+        xStringShift = (int) Math.round(xStringShift * deltaBoku);
+        yStringShift = (int) Math.round(yStringShift * deltaBoku);
     }
 
     public void zwiekszZycie() {

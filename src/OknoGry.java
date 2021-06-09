@@ -14,10 +14,11 @@ public class OknoGry extends JFrame implements Runnable {
 
     OknoGry() {
         this.setSize(SZEROKOSC_GRY, WYSOKOSC_OKNA);
-        wynik = new Wynik(1000);
-        wynik.setBounds(0, 0, SZEROKOSC_GRY, 100);
         panel = new PoleGry(SZEROKOSC_GRY, WYSOKOSC_GRY, wynik);
         panel.setBounds(0, 100, SZEROKOSC_GRY, WYSOKOSC_GRY);
+        wynik = new Wynik(1000, panel.wezT1(), panel.wezT2());
+        wynik.setBounds(0, 0, SZEROKOSC_GRY, 100);
+
 
         this.add(panel);
         this.add(wynik);

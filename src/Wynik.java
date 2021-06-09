@@ -5,15 +5,15 @@ import java.awt.event.ActionListener;
 
 public class Wynik extends JPanel implements ActionListener {
 
-    static int GAME_WIDTH;
-    final int TIME1 = 20000;
-    final int TIME2 = 300000;
+    static int gameWidth;
+    static int time1 = 20000;
+    static int time2 = 300000;
     private int player1 = 0;
     private int player2 = 0;
     private Image image;
     private Graphics2D graphics;
     JLabel timeLabel = new JLabel();
-    int elapsedTime = TIME1;
+    int elapsedTime = time1;
     int seconds = 10;
     int minutes = 0;
     boolean timeEnd = false;
@@ -21,7 +21,7 @@ public class Wynik extends JPanel implements ActionListener {
     String minutes_string =  String.format("%02d", minutes);
 
 
-    int elapsedTime2 = TIME2;
+    int elapsedTime2 = time2;
     int seconds2 = 0;
     int minutes2 = 10;
     boolean timeEnd2 = false;
@@ -57,24 +57,27 @@ public class Wynik extends JPanel implements ActionListener {
         }
     });
 
-    Wynik(int GAME_WIDTH) {
-        this.GAME_WIDTH = GAME_WIDTH;
+    Wynik(int gameWidth, int T1, int T2) {
+        this.gameWidth = gameWidth;
+        time1 = T1 *1000;
+        time2 = T2 * 1000;
         timer.start();
         timer2.start();
+
 
 
     }
     public void draw(Graphics g) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Consolas", Font.PLAIN, 60));
-        g.drawLine(0, 80, GAME_WIDTH, 80);
-        g.drawLine(GAME_WIDTH/2, 0, GAME_WIDTH/2, 80);
+        g.drawLine(0, 80, gameWidth, 80);
+        g.drawLine(gameWidth /2, 0, gameWidth /2, 80);
 
-        g.drawString(String.valueOf(player1/10) + String.valueOf(player1%10), (GAME_WIDTH/2)-85, 50);
-        g.drawString(String.valueOf(player2/10) + String.valueOf(player2%10), (GAME_WIDTH)/2+20, 50);
+        g.drawString(String.valueOf(player1/10) + String.valueOf(player1%10), (gameWidth /2)-85, 50);
+        g.drawString(String.valueOf(player2/10) + String.valueOf(player2%10), (gameWidth)/2+20, 50);
 
         g.drawString(minutes_string + ":" + seconds_string, 20, 50);
-        g.drawString(minutes_string2 + ":" + seconds_string2, GAME_WIDTH - 200, 50);
+        g.drawString(minutes_string2 + ":" + seconds_string2, gameWidth - 200, 50);
     }
     public void paint(Graphics g) {
         image = createImage(getWidth(), getHeight());
@@ -97,10 +100,12 @@ public class Wynik extends JPanel implements ActionListener {
     }
     public void ustawTimer() {
         timeEnd = false;
-        elapsedTime = TIME1;
+        elapsedTime = time1;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
 
     }
+
+
 }

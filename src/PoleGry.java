@@ -2,31 +2,47 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class PoleGry extends JPanel  {
     private static int SZEROKOSC_GRY;
     private static int WYSOKOSC_GRY;
     private static final Dimension ROZMIAR_OKNA = new Dimension(SZEROKOSC_GRY, WYSOKOSC_GRY);
+
+    private static double predkoscPociskow;
+    private static double predkoscKomorki;
+    private int limitPociskow;
     private static int srednicaPocisku = 10;
+    private static int bokKomorki = 30;
+    private static int T1;
+    private static int T2;
+    private static double deltaBokKomorki;
+    private static double deltaPredkoscKomorki;
+    private static double deltaSrednicaPocisku;
+
+
     private static final int SZEROKOSC_CZOLGU = 50;
     private static final int WYSOKOSC_CZOLGU = 40;
     private static final int SZEROKOSC_LUFY = 60;
     private static final int WYSOKOSC_LUFY = 10;
     private static final int LICZBA_POJEDYNCZYCH_KOMOREK = 10;
     private static final int LICZBA_KOLONI = 10;
-    private static int bokKomorki = 30;
+
     private static Wynik wynik;
     private int liczbaPociskow1;
     private int liczbaPociskow2;
-    private final int limitPociskow = 7;
+
     private Image image;
     private Czolg czolg1;
     private Czolg czolg2;
     private Lufa lufa1;
     private Lufa lufa2;
     private boolean wyjdz = false;
+
     private ArrayList<Pocisk> pociski1= new ArrayList<Pocisk>();
     private ArrayList<Pocisk> pociski2= new ArrayList<Pocisk>();
     private ArrayList<Komorka> komorki= new ArrayList<Komorka>();
@@ -34,6 +50,34 @@ public class PoleGry extends JPanel  {
     private KomorkaBomba komorkaBomba;
 
     PoleGry(int SZEROKOSC_GRY, int WYSOKOSC_GRY, Wynik wynik) {
+
+        try {
+            Scanner scanner = new Scanner(new File(System.getProperty("user.dir") + "/gameData/zmienne.txt"));
+
+            predkoscPociskow = scanner.nextDouble();
+            System.out.println(predkoscPociskow);
+            predkoscKomorki = scanner.nextDouble();
+            System.out.println(predkoscKomorki);
+            limitPociskow = scanner.nextInt();
+            System.out.println(limitPociskow);
+            srednicaPocisku = scanner.nextInt();
+            System.out.println(srednicaPocisku);
+            bokKomorki = scanner.nextInt();
+            System.out.println(bokKomorki);
+            T1 = scanner.nextInt();
+            System.out.println(T1);
+            T2 = scanner.nextInt();
+            System.out.println(T2);
+            deltaPredkoscKomorki = scanner.nextDouble();
+            System.out.println(deltaPredkoscKomorki);
+            deltaSrednicaPocisku = scanner.nextDouble();
+            System.out.println(deltaSrednicaPocisku);
+            deltaBokKomorki = scanner.nextDouble();
+            System.out.println(deltaBokKomorki);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         PoleGry.wynik = wynik;
         PoleGry.SZEROKOSC_GRY = SZEROKOSC_GRY;
         PoleGry.WYSOKOSC_GRY = WYSOKOSC_GRY;
@@ -41,9 +85,6 @@ public class PoleGry extends JPanel  {
         noweKolonie();
         noweKomorki();
         komorkaBomba = new KomorkaBomba(SZEROKOSC_GRY/2, WYSOKOSC_GRY - 50, bokKomorki);
-
-        /* generowanie nowych komórek */
-        /**/
 
         this.setFocusable(true);
         this.addKeyListener(new AL());
@@ -101,7 +142,6 @@ public class PoleGry extends JPanel  {
                     liczbaPociskow1--;
                     if(komorki.get(j).wezPunktyZycia() == 0 && komorki.get(j).wezID() == 999) {
                         wynik.zwiekszPunkty(1, komorki.get(j).wezPoczatkowePunktyZycia());
-                        wynik.repaint();
                         komorki.remove(j);
                     }
                     else if(komorki.get(j).wezPunktyZycia() == 0 && komorki.get(j).wezID() != 999) {
@@ -149,7 +189,6 @@ public class PoleGry extends JPanel  {
                     liczbaPociskow2--;
                     if(komorki.get(j).wezPunktyZycia() == 0 && komorki.get(j).wezID() == 999) {
                         wynik.zwiekszPunkty(1, komorki.get(j).wezPoczatkowePunktyZycia());
-                        wynik.repaint();
                         komorki.remove(j);
                     }
                     else if(komorki.get(j).wezPunktyZycia() == 0 && komorki.get(j).wezID() != 999) {
@@ -280,7 +319,9 @@ public class PoleGry extends JPanel  {
     private void noweKolonie() {
         boolean nachodzi = false;
         for(int i = 0; kolonie.size() != LICZBA_KOLONI; i++) {
-            kolonie.add(new Kolonia(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY, SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15, WYSOKOSC_GRY, bokKomorki, i));
+            kolonie.add(new Kolonia(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY,
+                    SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15, WYSOKOSC_GRY, bokKomorki, i,
+                    (double) predkoscKomorki, deltaBokKomorki, deltaPredkoscKomorki));
             for(Komorka kom : komorki) {
                 for(Komorka komN : kolonie.get(i).wezKolonie()) {
                     if(kom.czyNachodzi(komN.wezX(), komN.wezY(), bokKomorki)) {
@@ -305,9 +346,8 @@ public class PoleGry extends JPanel  {
         int aktualnyRozmiar = komorki.size();
         Random random = new Random();
         for( int i = aktualnyRozmiar; komorki.size() != aktualnyRozmiar + LICZBA_POJEDYNCZYCH_KOMOREK; i++) {
-            komorki.add(new Komorka(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY ,
-                    SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15,
-                    0, WYSOKOSC_GRY, bokKomorki, random.nextBoolean(), 999));
+            komorki.add(new Komorka(SZEROKOSC_CZOLGU + SZEROKOSC_LUFY , SZEROKOSC_GRY - SZEROKOSC_CZOLGU - SZEROKOSC_LUFY - 15,
+                    0, WYSOKOSC_GRY, bokKomorki, random.nextBoolean(), 999, (double) predkoscKomorki, deltaBokKomorki, deltaPredkoscKomorki));
             for (int j = 0; j < komorki.size() && i!=j; j++) {
                 if(komorki.get(i).czyNachodzi(komorki.get(j).wezX(), komorki.get(j).wezY(), bokKomorki)) {
                     komorki.remove(i);
@@ -315,6 +355,12 @@ public class PoleGry extends JPanel  {
                 }
             }
         }
+    }
+    public int wezT1(){
+        return T1;
+    }
+    public int wezT2(){
+        return T2;
     }
 
 }

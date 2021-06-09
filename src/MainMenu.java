@@ -37,15 +37,8 @@ public class MainMenu {
 
 
     MainMenu() {
-        File file = new File(System.getProperty("user.dir") + "/gameData/playerFunds.txt");
+        File file = new File(System.getProperty("user.dir") + "/gameData/zmienne.txt");
 
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(file);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
         EventQueue.invokeLater(() ->
         {
@@ -125,8 +118,6 @@ public class MainMenu {
             invisibleButton.setBounds(0, 0, 0, 0);
 
 
-
-
             addPanels();
 
 
@@ -140,9 +131,6 @@ public class MainMenu {
                         }
                     }
             );
-
-
-
             settingsButton.addActionListener(
                     new ActionListener() {
                         @Override
@@ -152,13 +140,9 @@ public class MainMenu {
                                 settings = new Settings();
                                 settings.displaySettings();
                             }
-
                         }
-
                     }
             );
-
-
         });
     }
 
@@ -166,17 +150,6 @@ public class MainMenu {
 
 
         frame.getContentPane().removeAll();
-
-        File file = new File(System.getProperty("user.dir") + "/gameData/playerFunds.txt");
-
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(file);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
 
         background.setIcon(menuBg);
 
